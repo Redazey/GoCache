@@ -110,13 +110,13 @@ func SaveCache(table string, cacheMap map[string]map[string]interface{}) error {
 		// Устанавливаем значение в хэш-таблицу
 		jsonMap, err := json.Marshal(args)
 		if err != nil {
-			log.Fatal("Ошибка при преобразовании кэша в json: %v", err.Error())
+			log.Fatalf("Ошибка при преобразовании кэша в json: %v", err.Error())
 			return err
 		}
 
 		err = conn.HSet(ctx, table, key, jsonMap).Err()
 		if err != nil {
-			log.Fatal("Ошибка при сохранении кэша в Redis: %v", err.Error())
+			log.Fatalf("Ошибка при сохранении кэша в Redis: %v", err.Error())
 			return err
 		}
 
@@ -124,7 +124,7 @@ func SaveCache(table string, cacheMap map[string]map[string]interface{}) error {
 		// здесь можете поменять время обновления кэша, например через конфиг
 		err = conn.Expire(ctx, key, time.Minute*15).Err()
 		if err != nil {
-			log.Fatal("Ошибка при установки срока жизни кэша: %v", err.Error())
+			log.Fatalf("Ошибка при установки срока жизни кэша: %v", err.Error())
 			return err
 		}
 	}
@@ -132,7 +132,7 @@ func SaveCache(table string, cacheMap map[string]map[string]interface{}) error {
 	// удаляем устаревшие данные
 	err := DeleteEX(table)
 	if err != nil {
-		log.Fatal("Ошибка при удалении устаревшего кэша: %v", err.Error())
+		log.Fatalf("Ошибка при удалении устаревшего кэша: %v", err.Error())
 		return err
 	}
 	return nil
